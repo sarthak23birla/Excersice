@@ -1,47 +1,44 @@
-t=gets.chomp.to_i
-while t!=0
-	input_string = gets.chomp # Input String Details of Commodity 
-	input_price = gets.chomp	# Input Details of Price
-	ar_input_string = input_string.split(",")
-	ar_input_price = input_price.split(",").map{|e| e.to_i}
-	if(ar_input_string.length == ar_input_price.length)
-		food_grain = ["rice" ,"wheat"] # 0 %
+number_of_product = gets.chomp.to_i
+while number_of_product != 0
+	commodity_data = gets.chomp   #String 1 to take input of commodity
+	commodity_price = gets.chomp  #String 2  to take input of prices
+	array_commodity_data  = commodity_data.split(",")
+	array_commodity_price = commodity_price.split(",").map{|e| e.to_i}
+	if (array_commodity_price.length == array_commodity_data.length)	
+		food_grains = ["rice","wheat"] # 0%
 		furniture = ["table","sofa","chair"] # 5%
-		electronics = ["mobile","tv","table"] # 18%
-		cosmetics =["beauty_cream","cream","perfume"] # 28%
-		overall_cost = 0 
-		for i in (0...ar_input_string.length)	
-			 # overall from one Commodity
-			input_count,input_type = ar_input_string[i].split(" ") #spliting 
-			input_count = input_count.to_i
-			input_type.downcase!
-			if(food_grain.include?(input_type)) # Checking in Which Category it is lies
-				base_price =(ar_input_price[i]*input_count) # base price 
-				puts "GST Applicable per unit: 0" 
-				overall_cost += base_price #For multiple input add the values
-			elsif(furniture.include?(input_type))
-				base_price = input_count*ar_input_price[i]
-				commodity_price = (base_price)+(0.05*base_price)
-				puts "GST Applicable per unit :#{base_price*0.05/input_count}"
-				overall_cost +=  commodity_price
-			elsif(electronics.include?(input_type))
-				base_price = input_count*ar_input_price[i]
-				commodity_price = (base_price)+(0.18*base_price)
-				puts "GST Applicable:#{base_price*0.18/input_count}"
-				overall_cost +=  commodity_price
-			elsif(cosmetics.include?(input_type))
-				base_price = input_count*ar_input_price[i]
-				commodity_price = (base_price)+(0.28*base_price)
-				puts "GST Applicable:#{base_price*0.28/input_count}"
-				overall_cost +=  commodity_price
+		electronics =["mobile","tv","tablets"] # 18%
+		cosmetics = ["beauty_cream","perfume"] # 28%
+		overall_price = 0 #Set to 0 for each test case
+		error_in_billing = false
+		for _index in (0...array_commodity_price.length)
+			product_count,product = array_commodity_data[_index].split(" ")
+			product_count = product_count.to_i #Convert the String to integer
+			intial_price = array_commodity_price[_index] * product_count  #intial_prices
+			if(food_grains.include?(product))
+				gst_price = (0*intial_price) #0% slab gst_price
+			elsif(furniture.include?(product))
+				gst_price = (0.05*intial_price) #5% slab gst_price
+			elsif(electronics.include?(product))
+				gst_price = (0.18*intial_price) #18% slab gst_price
+			elsif(cosmetics.include?(product))		
+				gst_price = (0.28*intial_price) #28% slab gst_price
 			else
-				puts "Commodity Not Found"
+				p "Invalid Product:#{product}"
+				error_in_billing = true # Error in billing because Product Invalid  
+				break
 			end
+			p "The GST per unit: #{gst_price/product_count}"
+			price_including_gst = intial_price + gst_price
+			overall_price += price_including_gst
 		end
-			puts "Overall Price after GST is:#{overall_cost}"
-
+		if(error_in_billing)
+			p "There was a error in billing"
+		else
+			p "The Overall price is #{overall_price}"
+		end
 	else
 		p "Invalid Data Entry"
 	end
-	t=t-1
+	number_of_product = number_of_product - 1
 end
